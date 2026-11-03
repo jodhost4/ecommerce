@@ -36,7 +36,7 @@ export default function ProductDetail() {
       const wishlistItems = res.data.data || [];
       const found = wishlistItems.some(item => (item.product?.id || item.id) === product.id);
       setInWishlist(found);
-    }).catch(() => {});
+    }).catch(() => { });
   }, [product?.id]);
 
   const handleAddToCart = async () => {
@@ -144,9 +144,8 @@ export default function ProductDetail() {
                 <button
                   key={i}
                   onClick={() => setSelectedImage(i)}
-                  className={`w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-colors ${
-                    i === selectedImage ? 'border-primary-600' : 'border-transparent hover:border-gray-300'
-                  }`}
+                  className={`w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-colors ${i === selectedImage ? 'border-primary-600' : 'border-transparent hover:border-gray-300'
+                    }`}
                 >
                   <img src={img.url} alt="" className="w-full h-full object-cover" />
                 </button>
@@ -171,7 +170,7 @@ export default function ProductDetail() {
             <span className="text-sm text-gray-500">({product.reviewCount || 0} reviews)</span>
           </div>
 
-          <div className="text-3xl font-bold text-primary-600 mb-6">${currentPrice?.toFixed(2)}</div>
+          <div className="text-3xl font-bold text-primary-600 mb-6">₹{Number(currentPrice).toFixed(2)}</div>
 
           <p className="text-gray-600 mb-6 leading-relaxed">{product.description}</p>
 
@@ -182,11 +181,10 @@ export default function ProductDetail() {
                 {[...values].map((value) => (
                   <button
                     key={value}
-                    className={`px-4 py-2 text-sm rounded-lg border transition-colors ${
-                      selectedVariant?.option1Value === value || selectedVariant?.option2Value === value
+                    className={`px-4 py-2 text-sm rounded-lg border transition-colors ${selectedVariant?.option1Value === value || selectedVariant?.option2Value === value
                         ? 'border-primary-600 bg-primary-50 text-primary-700'
                         : 'border-gray-300 text-gray-700 hover:border-gray-400'
-                    }`}
+                      }`}
                     onClick={() => {
                       const v = product.variants.find((v) => v.option1Value === value || v.option2Value === value);
                       if (v) setSelectedVariant(v);
@@ -231,9 +229,8 @@ export default function ProductDetail() {
             </button>
             <button
               onClick={handleToggleWishlist}
-              className={`p-3 rounded-lg border transition-colors ${
-                inWishlist ? 'border-red-300 bg-red-50 text-red-600' : 'border-gray-300 hover:bg-gray-50 text-gray-600'
-              }`}
+              className={`p-3 rounded-lg border transition-colors ${inWishlist ? 'border-red-300 bg-red-50 text-red-600' : 'border-gray-300 hover:bg-gray-50 text-gray-600'
+                }`}
             >
               <FiHeart className={`w-5 h-5 ${inWishlist ? 'fill-current' : ''}`} />
             </button>
@@ -290,7 +287,7 @@ export default function ProductDetail() {
                   <img src={rp.images?.[0]?.url || 'https://placehold.co/400'} alt={rp.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 </div>
                 <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">{rp.name}</h3>
-                <p className="text-primary-600 font-bold mt-1">${rp.price?.toFixed(2)}</p>
+                <p className="text-primary-600 font-bold mt-1">₹{Number(rp.price).toFixed(2)}</p>
               </Link>
             ))}
           </div>

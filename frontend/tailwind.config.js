@@ -32,8 +32,9 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        heading: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['var(--font-body, Inter)', 'system-ui', '-apple-system', 'sans-serif'],
+        heading: ['var(--font-heading, Inter)', 'system-ui', '-apple-system', 'sans-serif'],
+        body: ['var(--font-body, Inter)', 'system-ui', '-apple-system', 'sans-serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-in-out',

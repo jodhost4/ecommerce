@@ -146,9 +146,9 @@ export default function Home() {
                 </Link>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                {categories.slice(0, 12).map((cat, i) => (
-                  <motion.div key={cat.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
-                    <Link to={`/store/${urlStoreId}/categories/${cat.slug}`} className="group block p-5 bg-white rounded-2xl border border-gray-200 text-center hover:border-primary-300 hover:shadow-lg transition-all duration-300">
+                  {categories.slice(0, 12).map((cat, i) => (
+                    <motion.div key={cat.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
+                      <Link to={`/store/${urlStoreId}/products?category=${cat.id}`} className="group block p-5 bg-white rounded-2xl border border-gray-200 text-center hover:border-primary-300 hover:shadow-lg transition-all duration-300">
                       <div className="w-14 h-14 bg-primary-50 group-hover:bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-3 transition-colors">
                         <FiShoppingBag className="w-6 h-6 text-primary-600" />
                       </div>
@@ -292,7 +292,7 @@ export default function Home() {
                 : 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4'
               }>
                 {categories.slice(0, 12).map((cat) => (
-                  <Link key={cat.id} to={`/store/${urlStoreId}/categories/${cat.slug}`}
+                  <Link key={cat.id} to={`/store/${urlStoreId}/products?category=${cat.id}`}
                     className={section.type === 'categories-list'
                       ? 'block p-3 bg-white rounded-lg border border-gray-200 hover:border-primary-300 transition-colors text-sm font-medium text-gray-700 hover:text-primary-600'
                       : 'group block p-5 bg-white rounded-2xl border border-gray-200 text-center hover:border-primary-300 hover:shadow-lg transition-all'
@@ -427,7 +427,7 @@ export default function Home() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                   {categories.slice(0, 12).map((cat, i) => (
                     <motion.div key={cat.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
-                      <Link to={`/store/${urlStoreId}/categories/${cat.slug}`}
+                      <Link to={`/store/${urlStoreId}/products?category=${cat.id}`}
                         className="group block p-5 bg-white rounded-2xl border border-gray-200 text-center hover:border-primary-300 hover:shadow-lg transition-all duration-300">
                         <div className="w-14 h-14 bg-primary-50 group-hover:bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-3 transition-colors">
                           <FiShoppingBag className="w-6 h-6 text-primary-600" />

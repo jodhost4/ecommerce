@@ -557,7 +557,11 @@ const storefrontController = {
       const [orders, total] = await Promise.all([
         prisma.order.findMany({
           where,
-          include: { orderItems: true, store: { select: { id: true, name: true, logo: true } } },
+          include: {
+            orderItems: true,
+            store: { select: { id: true, name: true, logo: true } },
+            customer: { select: { id: true, firstName: true, lastName: true, email: true, phone: true } },
+          },
           orderBy: { createdAt: 'desc' },
           skip,
           take,
@@ -579,6 +583,7 @@ const storefrontController = {
         include: {
           orderItems: true,
           store: { select: { id: true, name: true, logo: true, email: true, phone: true } },
+          customer: { select: { id: true, firstName: true, lastName: true, email: true, phone: true } },
           payment: true,
           shipping: true,
         },

@@ -61,7 +61,8 @@ import Home from './pages/storefront/Home';
 import AboutStore from './pages/storefront/About';
 import ContactStore from './pages/storefront/Contact';
 import CMSPage from './pages/storefront/CMSPage';
-import Shop from './pages/storefront/Shop';
+import StorefrontCategories from './pages/storefront/Categories';
+import Shop from './pages/storefront/ProductListing';
 import ProductListing from './pages/storefront/ProductListing';
 import StorefrontProductDetail from './pages/storefront/ProductDetail';
 import Cart from './pages/storefront/Cart';
@@ -105,7 +106,8 @@ export default function App() {
           <Route path="/store/:storeId/shop" element={<Shop />} />
           <Route path="/store/:storeId/products" element={<ProductListing />} />
           <Route path="/store/:storeId/products/:slug" element={<StorefrontProductDetail />} />
-          <Route path="/store/:storeId/categories" element={<Categories />} />
+          <Route path="/store/:storeId/categories" element={<StorefrontCategories />} />
+          <Route path="/store/:storeId/categories/:slug" element={<ProductListing />} />
           <Route path="/store/:storeId/cart" element={<Cart />} />
           <Route path="/store/:storeId/checkout" element={<Checkout />} />
           <Route path="/store/:storeId/orders" element={<StorefrontOrders />} />

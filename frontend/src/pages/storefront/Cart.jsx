@@ -106,7 +106,7 @@ export default function Cart() {
               <div className="flex-1 min-w-0">
                 <Link to={`/store/${storeId}/products/${item.product?.slug}`} className="font-semibold text-gray-900 hover:text-primary-600">{item.product?.name}</Link>
                 {item.variantId && <p className="text-sm text-gray-500 mt-0.5">Variant</p>}
-                <p className="text-primary-600 font-bold mt-1">${(item.price * item.quantity).toFixed(2)}</p>
+                <p className="text-primary-600 font-bold mt-1">₹{Number(item.price * item.quantity).toFixed(2)}</p>
                 <div className="flex items-center justify-between mt-3">
                   <div className="flex items-center gap-2">
                     <button
@@ -141,24 +141,24 @@ export default function Cart() {
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-500">Subtotal</span>
-                <span className="font-medium">${subtotal.toFixed(2)}</span>
+                <span className="font-medium">₹{Number(subtotal).toFixed(2)}</span>
               </div>
               {appliedCoupon && (
                 <div className="flex justify-between text-green-600">
                   <span>Discount ({appliedCoupon.code})</span>
-                  <span>-${discount.toFixed(2)}</span>
+                  <span>-₹{Number(discount).toFixed(2)}</span>
                 </div>
               )}
               {showShipping && (
                 <div className="flex justify-between">
                   <span className="text-gray-500">Shipping</span>
-                  <span className="font-medium">{shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}</span>
+                  <span className="font-medium">{shipping === 0 ? 'FREE' : `₹${Number(shipping).toFixed(2)}`}</span>
                 </div>
               )}
               <hr className="border-gray-200" />
               <div className="flex justify-between text-lg font-bold">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>₹{Number(total).toFixed(2)}</span>
               </div>
             </div>
 

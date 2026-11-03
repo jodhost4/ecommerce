@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { FiUsers, FiBox, FiDollarSign, FiShoppingCart, FiTrendingUp, FiTrendingDown, FiClock, FiExternalLink, FiCopy } from 'react-icons/fi';
+import { FiUsers, FiBox, FiDollarSign, FiShoppingCart, FiTrendingUp, FiTrendingDown, FiClock, FiExternalLink, FiCopy, FiMenu } from 'react-icons/fi';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
@@ -128,6 +128,10 @@ export default function MerchantDashboard() {
         <h1 className="text-2xl font-bold text-secondary-900">Merchant Dashboard</h1>
         {user?.ownedStore && (
           <div className="flex items-center space-x-2">
+            <Link to="/merchant/design" className="btn-secondary flex items-center space-x-2">
+              <FiMenu className="w-4 h-4" />
+              <span>Store Design</span>
+            </Link>
             <button
               onClick={handlePublish}
               disabled={publishing}

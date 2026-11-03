@@ -16,6 +16,36 @@ const getTargetStoreId = async (req) => {
   throw new ApiError(400, 'Store context not found. Please ensure you are logged in as a store owner or staff.');
 };
 
+// Verify requesting user owns (or has access to) the resolved storeId
+const verifyStoreAccess = async (req, storeId) => {
+  const userRole = req.user?.role?.name;
+  if (userRole === 'SUPER_ADMIN') return; // Super admins can edit any store
+
+  // Check direct ownership
+  if (req.user?.ownedStore?.id === storeId) return;
+
+  // Check via DB
+  const owned = await prisma.store.findFirst({
+    where: { id: storeId, ownerId: req.user.id },
+    select: { id: true }
+  });
+  if (owned) return;
+
+  // Check staff access
+  const staff = await prisma.storeStaff.findFirst({
+    where: { storeId, userId: req.user.id, isActive: true },
+    select: { storeId: true }
+  });
+  if (staff) return;
+
+  throw new ApiError(403, 'You do not have permission to modify this store\'s design settings.');
+};
+
+const safeObject = (val) => {
+  if (!val || typeof val !== 'object' || Array.isArray(val)) return {};
+  return val;
+};
+
 const storeDesignController = {
   async getTheme(req, res, next) {
     try {
@@ -33,24 +63,54 @@ const storeDesignController = {
   async updateTheme(req, res, next) {
     try {
       const storeId = await getTargetStoreId(req);
+      await verifyStoreAccess(req, storeId);
+
       const themeData = req.body;
+      const colors = safeObject(themeData.colors);
+      const fonts = safeObject(themeData.fonts);
+      const layout = safeObject(themeData.layout);
+
+      if (colors.primary && !/^#[0-9a-fA-F]{6}$/.test(colors.primary)) {
+        throw new ApiError(400, 'Invalid primary color format. Use hex (e.g., #ff0000)');
+      }
 
       const theme = await prisma.storeTheme.upsert({
         where: { storeId },
-        update: themeData,
+        update: {
+          colors,
+          fonts,
+          layout,
+          header: themeData.header !== undefined ? safeObject(themeData.header) : undefined,
+          footer: themeData.footer !== undefined ? safeObject(themeData.footer) : undefined,
+          homepage: themeData.homepage !== undefined ? safeObject(themeData.homepage) : undefined,
+          menus: themeData.menus !== undefined ? themeData.menus : undefined,
+          pageLayouts: themeData.pageLayouts !== undefined ? safeObject(themeData.pageLayouts) : undefined,
+          customCSS: themeData.customCSS !== undefined ? themeData.customCSS : undefined,
+          name: themeData.name || 'Custom',
+        },
         create: {
-          ...themeData,
+          name: themeData.name || 'Custom',
           storeId,
-          colors: themeData.colors || {},
-          fonts: themeData.fonts || {},
-          layout: themeData.layout || {},
+          colors,
+          fonts,
+          layout,
+          header: safeObject(themeData.header),
+          footer: safeObject(themeData.footer),
+          homepage: safeObject(themeData.homepage),
+          menus: themeData.menus || {},
+          pageLayouts: safeObject(themeData.pageLayouts),
+          customCSS: themeData.customCSS || '',
         },
       });
 
       ApiResponse.success(res, theme);
     } catch (error) {
-      console.error('updateTheme Error:', error);
-      next(error);
+      if (error instanceof ApiError) {
+        next(error);
+      } else {
+        console.error('updateTheme Error:', error);
+        next(new ApiError(500, 'Failed to update theme. Please check your input and try again.'));
+      }
     }
   },
 
@@ -70,9 +130,18 @@ const storeDesignController = {
   async updateHomepage(req, res, next) {
     try {
       const storeId = await getTargetStoreId(req);
-      const theme = await prisma.storeTheme.update({
+      await verifyStoreAccess(req, storeId);
+      const theme = await prisma.storeTheme.upsert({
         where: { storeId },
-        data: { homepage: req.body },
+        update: { homepage: req.body },
+        create: {
+          storeId,
+          name: 'Custom',
+          colors: {},
+          fonts: {},
+          layout: {},
+          homepage: req.body,
+        },
       });
       ApiResponse.success(res, theme.homepage);
     } catch (error) {
@@ -96,9 +165,18 @@ const storeDesignController = {
   async updateHeader(req, res, next) {
     try {
       const storeId = await getTargetStoreId(req);
-      const theme = await prisma.storeTheme.update({
+      await verifyStoreAccess(req, storeId);
+      const theme = await prisma.storeTheme.upsert({
         where: { storeId },
-        data: { header: req.body },
+        update: { header: req.body },
+        create: {
+          storeId,
+          name: 'Custom',
+          colors: {},
+          fonts: {},
+          layout: {},
+          header: req.body,
+        },
       });
       ApiResponse.success(res, theme.header);
     } catch (error) {
@@ -122,9 +200,18 @@ const storeDesignController = {
   async updateFooter(req, res, next) {
     try {
       const storeId = await getTargetStoreId(req);
-      const theme = await prisma.storeTheme.update({
+      await verifyStoreAccess(req, storeId);
+      const theme = await prisma.storeTheme.upsert({
         where: { storeId },
-        data: { footer: req.body },
+        update: { footer: req.body },
+        create: {
+          storeId,
+          name: 'Custom',
+          colors: {},
+          fonts: {},
+          layout: {},
+          footer: req.body,
+        },
       });
       ApiResponse.success(res, theme.footer);
     } catch (error) {
@@ -148,9 +235,18 @@ const storeDesignController = {
   async updateMenus(req, res, next) {
     try {
       const storeId = await getTargetStoreId(req);
-      const theme = await prisma.storeTheme.update({
+      await verifyStoreAccess(req, storeId);
+      const theme = await prisma.storeTheme.upsert({
         where: { storeId },
-        data: { menus: req.body },
+        update: { menus: req.body },
+        create: {
+          storeId,
+          name: 'Custom',
+          colors: {},
+          fonts: {},
+          layout: {},
+          menus: req.body,
+        },
       });
       ApiResponse.success(res, theme.menus);
     } catch (error) {
@@ -174,6 +270,7 @@ const storeDesignController = {
   async updatePageLayout(req, res, next) {
     try {
       const storeId = await getTargetStoreId(req);
+      await verifyStoreAccess(req, storeId);
       const { pageType } = req.params;
 
       const validTypes = ['shop', 'product-detail', 'cart', 'checkout', 'wishlist', 'categories'];
@@ -186,12 +283,20 @@ const storeDesignController = {
         select: { pageLayouts: true },
       });
 
-      const pageLayouts = existing?.pageLayouts || {};
+      const pageLayouts = safeObject(existing?.pageLayouts);
       pageLayouts[pageType] = req.body;
 
-      const theme = await prisma.storeTheme.update({
+      const theme = await prisma.storeTheme.upsert({
         where: { storeId },
-        data: { pageLayouts },
+        update: { pageLayouts },
+        create: {
+          storeId,
+          name: 'Custom',
+          colors: {},
+          fonts: {},
+          layout: {},
+          pageLayouts,
+        },
       });
 
       ApiResponse.success(res, theme.pageLayouts, `${pageType} layout updated`);

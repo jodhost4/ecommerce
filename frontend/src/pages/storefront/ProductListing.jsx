@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiGrid, FiList, FiFilter, FiSearch, FiStar, FiShoppingCart, FiChevronLeft, FiChevronRight, FiX } from 'react-icons/fi';
+import { FiGrid, FiList, FiFilter, FiSearch, FiStar, FiShoppingCart, FiHeart, FiChevronLeft, FiChevronRight, FiX } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import api from '../../services/api';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
@@ -96,6 +96,15 @@ export default function ProductListing() {
     }
   };
 
+  const handleAddToWishlist = async (productId) => {
+    try {
+      await api.post(`/stores/${storeId}/wishlist`, { productId });
+      toast.success('Added to wishlist');
+    } catch {
+      toast.error('Please login to add items to wishlist');
+    }
+  };
+
   const clearFilters = () => {
     setLocalSearch('');
     setLocalMinPrice('');
@@ -154,7 +163,7 @@ export default function ProductListing() {
           )}
           {(minPrice || maxPrice) && (
             <span className="inline-flex items-center px-3 py-1 bg-primary-50 text-primary-700 text-sm rounded-full">
-              Price: ${minPrice || '0'} - ${maxPrice || '∞'} <button onClick={() => { setLocalMinPrice(''); setLocalMaxPrice(''); updateParams({ minPrice: '', maxPrice: '' }); }}><FiX className="ml-1 w-3 h-3" /></button>
+              Price: ₹{minPrice || '0'} - ₹{maxPrice || '∞'} <button onClick={() => { setLocalMinPrice(''); setLocalMaxPrice(''); updateParams({ minPrice: '', maxPrice: '' }); }}><FiX className="ml-1 w-3 h-3" /></button>
             </span>
           )}
           <button onClick={clearFilters} className="text-sm text-red-600 hover:text-red-700">Clear all</button>
@@ -306,13 +315,21 @@ export default function ProductListing() {
                         </div>
                       </div>
                       <div className={`flex items-center justify-between ${viewMode === 'grid' ? 'mt-3' : 'mt-2'}`}>
-                        <span className="text-lg font-bold text-primary-600">${product.price?.toFixed(2)}</span>
-                        <button
-                          onClick={() => handleAddToCart(product.id)}
-                          className="p-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-                        >
-                          <FiShoppingCart className="w-4 h-4" />
-                        </button>
+                        <span className="text-lg font-bold text-primary-600">₹{Number(product.basePrice || product.price || 0).toFixed(2)}</span>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleAddToWishlist(product.id)}
+                            className="p-2 text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors"
+                          >
+                            <FiHeart className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleAddToCart(product.id)}
+                            className="p-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                          >
+                            <FiShoppingCart className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </motion.div>

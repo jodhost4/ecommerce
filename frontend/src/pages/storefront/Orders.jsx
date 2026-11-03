@@ -82,8 +82,8 @@ export default function Orders() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-500">{order.items?.length || 0} items</span>
-                    <span className="text-lg font-bold text-gray-900">${order.total?.toFixed(2)}</span>
+                    <span className="text-sm text-gray-500">{(order.orderItems || order.items)?.length || 0} items</span>
+                    <span className="text-lg font-bold text-gray-900">₹{Number(order.total).toFixed(2)}</span>
                   </div>
                   <FiChevronRight className="w-5 h-5 text-gray-400" />
                 </div>

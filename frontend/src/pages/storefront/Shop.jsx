@@ -14,11 +14,11 @@ const SORT_OPTIONS = [
 ];
 
 const PRICE_RANGES = [
-  { label: 'Under $25', min: 0, max: 25 },
-  { label: '$25 - $50', min: 25, max: 50 },
-  { label: '$50 - $100', min: 50, max: 100 },
-  { label: '$100 - $200', min: 100, max: 200 },
-  { label: 'Over $200', min: 200, max: null },
+  { label: 'Under ₹25', min: 0, max: 25 },
+  { label: '₹25 - ₹50', min: 25, max: 50 },
+  { label: '₹50 - ₹100', min: 50, max: 100 },
+  { label: '₹100 - ₹200', min: 100, max: 200 },
+  { label: 'Over ₹200', min: 200, max: null },
 ];
 
 const RATING_FILTERS = [4, 3, 2, 1];
@@ -65,7 +65,7 @@ export default function Shop() {
     ]).then(([catRes, brandRes]) => {
       setCategories(catRes.data.data || []);
       setBrands(brandRes.data.data || []);
-    }).catch(() => {});
+    }).catch(() => { });
   }, []);
 
   useEffect(() => {
@@ -133,7 +133,7 @@ export default function Shop() {
       )}
       {(minPrice || maxPrice) && (
         <span className="inline-flex items-center px-3 py-1 bg-primary-50 text-primary-700 text-sm rounded-full">
-          Price: ${minPrice || '0'} - ${maxPrice || '∞'} <button onClick={() => updateParams({ minPrice: '', maxPrice: '' })}><FiX className="ml-1 w-3 h-3" /></button>
+          Price: ₹{minPrice || '0'} - ₹{maxPrice || '∞'} <button onClick={() => updateParams({ minPrice: '', maxPrice: '' })}><FiX className="ml-1 w-3 h-3" /></button>
         </span>
       )}
       <button onClick={clearFilters} className="text-sm text-red-600 hover:text-red-700">Clear all</button>
@@ -183,11 +183,10 @@ export default function Shop() {
             <button
               key={range.label}
               onClick={() => updateParams({ minPrice: range.min, maxPrice: range.max || '' })}
-              className={`block w-full text-left px-3 py-2 text-sm rounded-lg transition-colors ${
-                minPrice === String(range.min) && maxPrice === String(range.max || '')
+              className={`block w-full text-left px-3 py-2 text-sm rounded-lg transition-colors ${minPrice === String(range.min) && maxPrice === String(range.max || '')
                   ? 'bg-primary-50 text-primary-700 font-medium'
                   : 'text-gray-600 hover:bg-gray-50'
-              }`}
+                }`}
             >
               {range.label}
             </button>
@@ -345,7 +344,7 @@ export default function Shop() {
                       <FiStar className="w-3.5 h-3.5 text-yellow-400 fill-current" />
                       <span className="text-xs text-gray-500">{product.averageRating || '0.0'}</span>
                     </div>
-                    <p className="text-lg font-bold text-primary-600 mt-1">${product.price?.toFixed(2)}</p>
+                    <p className="text-lg font-bold text-primary-600 mt-1">₹{Number(product.price).toFixed(2)}</p>
                   </motion.div>
                 ))}
               </motion.div>
@@ -363,9 +362,8 @@ export default function Shop() {
                     <button
                       key={p}
                       onClick={() => updateParams({ page: p })}
-                      className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors ${
-                        p === page ? 'bg-primary-600 text-white' : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
-                      }`}
+                      className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors ${p === page ? 'bg-primary-600 text-white' : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                        }`}
                     >
                       {p}
                     </button>

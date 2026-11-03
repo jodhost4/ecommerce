@@ -51,12 +51,12 @@ const SECTION_TYPES = [
 ];
 
 const defaultPageLayouts = {
-  shop: { viewMode: 'grid', sidebar: true, itemsPerPage: 12, showFilters: true, showSort: true },
+  shop: { viewMode: 'grid', sidebar: true, itemsPerPage: 12, showFilters: true, showSort: true, cardStyle: 'default', cardAnimation: 'fade-up', cardBorderRadius: 'xl', cardShadow: 'sm' },
   'product-detail': { showReviews: true, showRelated: true, showVariants: true, galleryStyle: 'stacked' },
   cart: { showCoupon: true, showShipping: true, layout: 'default' },
   checkout: { showNotes: true, showCoupon: true, stepsStyle: 'sidebar' },
   wishlist: { viewMode: 'grid', showShare: true },
-  categories: { viewMode: 'grid', sidebar: true, showProductCount: true },
+  categories: { viewMode: 'grid', sidebar: true, showProductCount: true, cardStyle: 'default' },
 };
 
 function Toggle({ value, onChange, label }) {
@@ -346,35 +346,28 @@ export default function StoreDesign() {
   );
 
   const allRoutes = [
-    { type: 'Home', name: 'Home Page', route: `/store/${storeSlug || '{slug}'}/home` },
-    { type: 'Shop', name: 'All Products', route: `/store/${storeSlug || '{slug}'}/products` },
-    { type: 'Cart', name: 'Shopping Cart', route: `/store/${storeSlug || '{slug}'}/cart` },
-    { type: 'Checkout', name: 'Checkout', route: `/store/${storeSlug || '{slug}'}/checkout` },
-    { type: 'Wishlist', name: 'Wishlist', route: `/store/${storeSlug || '{slug}'}/wishlist` },
-    { type: 'Categories', name: 'All Categories', route: `/store/${storeSlug || '{slug}'}/categories` },
-    { type: 'Orders', name: 'My Orders', route: `/store/${storeSlug || '{slug}'}/orders` },
-    { type: 'Profile', name: 'My Profile', route: `/store/${storeSlug || '{slug}'}/profile` },
-    { type: 'Addresses', name: 'Address Book', route: `/store/${storeSlug || '{slug}'}/addresses` },
-    { type: 'Tracking', name: 'Order Tracking', route: `/store/${storeSlug || '{slug}'}/tracking` },
-    { type: 'About', name: 'About Us', route: `/store/${storeSlug || '{slug}'}/about` },
-    { type: 'Contact', name: 'Contact Us', route: `/store/${storeSlug || '{slug}'}/contact` },
-    { type: 'Footer', name: 'All Products (Footer)', route: `/store/${storeSlug || '{slug}'}/products` },
-    { type: 'Footer', name: 'Popular Products (Footer)', route: `/store/${storeSlug || '{slug}'}/products?sort=popular` },
-    { type: 'Footer', name: 'My Profile (Footer)', route: `/store/${storeSlug || '{slug}'}/profile` },
-    { type: 'Footer', name: 'My Orders (Footer)', route: `/store/${storeSlug || '{slug}'}/orders` },
-    { type: 'Footer', name: 'Cart (Footer)', route: `/store/${storeSlug || '{slug}'}/cart` },
-    { type: 'Footer', name: 'Contact Us (Footer)', route: `/store/${storeSlug || '{slug}'}/contact` },
-    { type: 'Footer', name: 'About Us (Footer)', route: `/store/${storeSlug || '{slug}'}/about` },
-    { type: 'Footer', name: 'Order Tracking (Footer)', route: `/store/${storeSlug || '{slug}'}/tracking` },
+    { type: 'Core', name: 'Home Page', route: `/store/${storeSlug || '{slug}'}/home` },
+    { type: 'Core', name: 'All Products', route: `/store/${storeSlug || '{slug}'}/products` },
+    { type: 'Core', name: 'All Categories', route: `/store/${storeSlug || '{slug}'}/categories` },
+    { type: 'Core', name: 'Shopping Cart', route: `/store/${storeSlug || '{slug}'}/cart` },
+    { type: 'Core', name: 'Checkout', route: `/store/${storeSlug || '{slug}'}/checkout` },
+    { type: 'Core', name: 'Wishlist', route: `/store/${storeSlug || '{slug}'}/wishlist` },
+    { type: 'Core', name: 'My Orders', route: `/store/${storeSlug || '{slug}'}/orders` },
+    { type: 'Core', name: 'My Profile', route: `/store/${storeSlug || '{slug}'}/profile` },
+    { type: 'Core', name: 'Address Book', route: `/store/${storeSlug || '{slug}'}/addresses` },
+    { type: 'Core', name: 'Order Tracking', route: `/store/${storeSlug || '{slug}'}/tracking` },
+    { type: 'Core', name: 'About Us', route: `/store/${storeSlug || '{slug}'}/about` },
+    { type: 'Core', name: 'Contact Us', route: `/store/${storeSlug || '{slug}'}/contact` },
+    // Only add footer/header links that are actually configured by the store owner
     ...(footer.links || []).filter(l => l.label && l.url).map((l) => ({
       type: 'Footer Link',
       name: l.label,
-      route: l.url.startsWith('http') ? l.url : `/store/${storeSlug || '{slug}'}${l.url}`,
+      route: l.url.startsWith('http') ? l.url : `/store/${storeSlug || '{slug}'}${l.url.startsWith('/') ? '' : '/'}${l.url}`,
     })),
     ...(header.links || []).filter(l => l.label && l.url).map((l) => ({
       type: 'Header Link',
       name: l.label,
-      route: l.url.startsWith('http') ? l.url : `/store/${storeSlug || '{slug}'}${l.url}`,
+      route: l.url.startsWith('http') ? l.url : `/store/${storeSlug || '{slug}'}${l.url.startsWith('/') ? '' : '/'}${l.url}`,
     })),
     ...(routes.categories || []).map((cat) => ({
       type: 'Category',
@@ -398,6 +391,7 @@ export default function StoreDesign() {
     })),
   ];
 
+
   const routeTypes = [...new Set(allRoutes.map((r) => r.type))];
 
   if (loading) return <LoadingSpinner size="lg" />;
@@ -408,6 +402,16 @@ export default function StoreDesign() {
         <h1 className="text-2xl font-bold text-secondary-900">Store Design</h1>
         <div className="flex items-center space-x-2">
           <button onClick={fetchDesignData} className="btn-secondary p-2 rounded-lg"><FiRefreshCw className="w-4 h-4" /></button>
+          <button
+            onClick={() => {
+              const previewTheme = { colors: theme.colors, fonts: theme.fonts, pageLayouts: pageLayouts, footer: footer, pageLayouts: pageLayouts };
+              localStorage.setItem('theme_preview', JSON.stringify(previewTheme));
+              window.open(`/store/${storeSlug || 'default'}/home?preview=true`, '_blank');
+            }}
+            className="btn-secondary flex items-center space-x-2 px-4 py-2 rounded-lg"
+          >
+            <FiEye className="w-4 h-4" /><span className="hidden sm:inline">Preview Theme</span>
+          </button>
           {activeTab !== 'routes' && (
             <button onClick={handleSave} disabled={saving} className="btn-primary flex items-center space-x-2 px-4 py-2 rounded-lg">
               <FiSave className="w-4 h-4" /><span>{saving ? 'Saving...' : 'Save'}</span>
@@ -674,6 +678,10 @@ export default function StoreDesign() {
         { key: 'showFilters', label: 'Show Filters', type: 'toggle', default: true },
         { key: 'showSort', label: 'Show Sort Options', type: 'toggle', default: true },
         { key: 'itemsPerPage', label: 'Items Per Page', type: 'number', default: 12, min: 6, max: 48 },
+        { key: 'cardStyle', label: 'Card Style', type: 'select', default: 'default', options: [{ value: 'default', label: 'Default' }, { value: 'minimal', label: 'Minimal' }, { value: 'bordered', label: 'Bordered' }, { value: 'elevated', label: 'Elevated' }, { value: 'rounded', label: 'Rounded' }] },
+        { key: 'cardAnimation', label: 'Card Animation', type: 'select', default: 'fade-up', options: [{ value: 'none', label: 'None' }, { value: 'fade-up', label: 'Fade Up' }, { value: 'fade-in', label: 'Fade In' }, { value: 'scale-up', label: 'Scale Up' }, { value: 'slide-up', label: 'Slide Up' }] },
+        { key: 'cardBorderRadius', label: 'Card Border Radius', type: 'select', default: 'xl', options: [{ value: 'none', label: 'None' }, { value: 'md', label: 'Medium' }, { value: 'lg', label: 'Large' }, { value: 'xl', label: 'Extra Large' }, { value: '2xl', label: '2XL' }, { value: 'full', label: 'Full' }] },
+        { key: 'cardShadow', label: 'Card Shadow', type: 'select', default: 'sm', options: [{ value: 'none', label: 'None' }, { value: 'sm', label: 'Small' }, { value: 'md', label: 'Medium' }, { value: 'lg', label: 'Large' }, { value: 'xl', label: 'Extra Large' }] },
       ])}
 
       {activeTab === 'product-page' && renderLayoutSection('product-detail', 'Product Detail Page', [
@@ -689,11 +697,56 @@ export default function StoreDesign() {
         { key: 'layout', label: 'Layout Style', type: 'select', default: 'default', options: [{ value: 'default', label: 'Default' }, { value: 'compact', label: 'Compact' }] },
       ])}
 
-      {activeTab === 'checkout' && renderLayoutSection('checkout', 'Checkout Page', [
-        { key: 'showNotes', label: 'Show Order Notes', type: 'toggle', default: true },
-        { key: 'showCoupon', label: 'Show Coupon Field', type: 'toggle', default: true },
-        { key: 'stepsStyle', label: 'Steps Layout', type: 'select', default: 'sidebar', options: [{ value: 'sidebar', label: 'Sidebar Summary' }, { value: 'top', label: 'Top Stepper' }] },
-      ])}
+      {activeTab === 'checkout' && (
+        <div className="space-y-6">
+          {renderLayoutSection('checkout', 'Checkout Page', [
+            { key: 'showNotes', label: 'Show Order Notes', type: 'toggle', default: true },
+            { key: 'showCoupon', label: 'Show Coupon Field', type: 'toggle', default: true },
+            { key: 'stepsStyle', label: 'Steps Layout', type: 'select', default: 'sidebar', options: [{ value: 'sidebar', label: 'Sidebar Summary' }, { value: 'top', label: 'Top Stepper' }] },
+          ])}
+          <div className="card p-6">
+            <h2 className="text-lg font-semibold text-secondary-900 mb-1">Payment Methods</h2>
+            <p className="text-sm text-secondary-500 mb-4">Select which payment methods customers can use at checkout.</p>
+            <div className="space-y-3">
+              {[
+                { id: 'cod', label: 'Cash on Delivery (COD)', desc: 'Pay with cash when order is delivered' },
+                { id: 'upi', label: 'UPI Payment', desc: 'Google Pay, PhonePe, Paytm, BHIM' },
+                { id: 'card', label: 'Credit / Debit Card', desc: 'Visa, Mastercard, RuPay' },
+                { id: 'netbanking', label: 'Net Banking', desc: 'All major Indian banks' },
+                { id: 'wallet', label: 'Wallets', desc: 'Paytm, MobiKwik, Amazon Pay' },
+                { id: 'emi', label: 'EMI / No-Cost EMI', desc: 'Monthly instalment options' },
+              ].map((pm) => {
+                const currentMethods = pageLayouts.checkout?.paymentMethods || ['cod'];
+                const isEnabled = currentMethods.includes(pm.id);
+                return (
+                  <div key={pm.id} className="flex items-center justify-between p-3 rounded-lg border border-secondary-200 hover:border-primary-300 transition-colors">
+                    <div>
+                      <p className="text-sm font-medium text-secondary-900">{pm.label}</p>
+                      <p className="text-xs text-secondary-500">{pm.desc}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const current = pageLayouts.checkout?.paymentMethods || ['cod'];
+                        const updated = isEnabled
+                          ? current.filter((m) => m !== pm.id)
+                          : [...current, pm.id];
+                        // Ensure at least one method is always enabled
+                        if (updated.length === 0) { toast.error('At least one payment method must be enabled'); return; }
+                        updatePageLayout('checkout', 'paymentMethods', updated);
+                      }}
+                      className={`relative w-10 h-5 rounded-full transition-colors flex-shrink-0 ${isEnabled ? 'bg-primary-600' : 'bg-secondary-300'}`}
+                    >
+                      <span className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow-sm transition-transform ${isEnabled ? 'translate-x-5' : ''}`} />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
 
       {activeTab === 'wishlist' && renderLayoutSection('wishlist', 'Wishlist Page', [
         { key: 'viewMode', label: 'Default View', type: 'select', default: 'grid', options: [{ value: 'grid', label: 'Grid' }, { value: 'list', label: 'List' }] },

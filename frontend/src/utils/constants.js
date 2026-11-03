@@ -80,21 +80,36 @@ export const THEME_PRESETS = [
   {
     id: 'light',
     name: 'Light',
-    colors: { primary: '#3b82f6', background: '#ffffff', text: '#1e293b' },
+    colors: { primary: '#3b82f6', secondary: '#10b981', background: '#ffffff', text: '#1e293b' },
   },
   {
     id: 'dark',
     name: 'Dark',
-    colors: { primary: '#60a5fa', background: '#0f172a', text: '#f1f5f9' },
+    colors: { primary: '#60a5fa', secondary: '#f472b6', background: '#0f172a', text: '#f1f5f9' },
   },
   {
     id: 'minimal',
     name: 'Minimal',
-    colors: { primary: '#000000', background: '#ffffff', text: '#000000' },
+    colors: { primary: '#000000', secondary: '#6b7280', background: '#ffffff', text: '#000000' },
   },
   {
     id: 'nature',
     name: 'Nature',
-    colors: { primary: '#16a34a', background: '#f0fdf4', text: '#166534' },
+    colors: { primary: '#16a34a', secondary: '#d97706', background: '#f0fdf4', text: '#166534' },
+  },
+  {
+    id: 'green',
+    name: 'Green',
+    colors: { primary: '#22c55e', secondary: '#16a34a', background: '#f0fdf4', text: '#14532d' },
+  },
+  {
+    id: 'dark-green',
+    name: 'Dark Green',
+    colors: { primary: '#166534', secondary: '#15803d', background: '#052e16', text: '#bbf7d0' },
+  },
+  {
+    id: 'black',
+    name: 'Black',
+    colors: { primary: '#ffffff', secondary: '#a3a3a3', background: '#000000', text: '#fafafa' },
   },
 ];

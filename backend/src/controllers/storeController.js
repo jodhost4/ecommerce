@@ -247,6 +247,10 @@ const storeController = {
     try {
       const { name, colors, fonts, layout, header, footer, homepage, customCSS, isActive } = req.body;
 
+      if (colors?.primary && !/^#[0-9a-fA-F]{6}$/.test(colors.primary)) {
+        throw new ApiError(400, 'Invalid primary color format. Use hex (e.g., #ff0000)');
+      }
+
       const data = {};
       if (name !== undefined) data.name = name;
       if (colors !== undefined) data.colors = colors;
@@ -266,7 +270,12 @@ const storeController = {
 
       ApiResponse.success(res, theme, 'Theme updated successfully');
     } catch (error) {
-      next(error);
+      if (error instanceof ApiError) {
+        next(error);
+      } else {
+        console.error('updateStoreTheme Error:', error);
+        next(new ApiError(500, 'Failed to update theme. Please check your input and try again.'));
+      }
     }
   },
 

@@ -26,6 +26,8 @@
     --secondary-800: 30 41 59;
     --secondary-900: 15 23 42;
     --secondary-950: 2 6 23;
+    --font-heading: 'Inter', sans-serif;
+    --font-body: 'Inter', sans-serif;
   }
 
   * {
@@ -62,4 +64,77 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* Storefront Theme Styling Overrides */
+.storefront-container {
+  background-color: rgb(var(--theme-bg, 255 255 255)) !important;
+  color: rgb(var(--theme-text, 30 41 59)) !important;
+}
+
+.storefront-container h1:not(.text-white):not(.text-gray-100):not(.text-gray-200),
+.storefront-container h2:not(.text-white):not(.text-gray-100):not(.text-gray-200),
+.storefront-container h3:not(.text-white):not(.text-gray-100):not(.text-gray-200),
+.storefront-container h4:not(.text-white):not(.text-gray-100):not(.text-gray-200),
+.storefront-container h5:not(.text-white):not(.text-gray-100):not(.text-gray-200),
+.storefront-container h6:not(.text-white):not(.text-gray-100):not(.text-gray-200),
+.storefront-container label:not(.text-white):not(.text-gray-100):not(.text-gray-200) {
+  color: rgb(var(--theme-text, 30 41 59)) !important;
+}
+
+.storefront-container p:not(.text-white):not(.text-gray-100):not(.text-gray-200):not(.text-primary-100):not(.text-primary-200):not(.text-orange-100):not(.text-orange-200),
+.storefront-container span:not(.text-white):not(.text-gray-100):not(.text-gray-200):not(.text-primary-100):not(.text-primary-200):not(.text-orange-100):not(.text-orange-200),
+.storefront-container li:not(.text-white):not(.text-gray-100):not(.text-gray-200),
+.storefront-container a:not(.btn-primary):not(.btn-secondary):not(.text-white):not(.text-gray-100):not(.text-gray-200) {
+  color: rgb(var(--theme-text-muted, 100 116 139));
+}
+
+.storefront-container input,
+.storefront-container select,
+.storefront-container textarea {
+  background-color: rgb(var(--theme-card-bg, 255 255 255)) !important;
+  color: rgb(var(--theme-text, 30 41 59)) !important;
+  border-color: rgb(var(--theme-border-color, 226 232 240)) !important;
+}
+
+/* Card and Container overrides */
+.storefront-container .card,
+.storefront-container .bg-white:not(.text-white):not(.bg-gradient-to-br),
+.storefront-container .bg-gray-50,
+.storefront-container .bg-secondary-50 {
+  background-color: rgb(var(--theme-card-bg, 255 255 255)) !important;
+  color: rgb(var(--theme-text, 30 41 59)) !important;
+  border-color: rgb(var(--theme-border-color, 226 232 240)) !important;
+}
+
+/* Highlight white/light classes to stay white */
+.storefront-container .text-white {
+  color: #ffffff !important;
+}
+.storefront-container .text-gray-100 {
+  color: #f3f4f6 !important;
+}
+.storefront-container .text-gray-200 {
+  color: #e5e7eb !important;
+}
+
+/* Override text color helpers dynamically */
+.storefront-container .text-gray-900:not(.text-white),
+.storefront-container .text-secondary-900:not(.text-white),
+.storefront-container .text-black:not(.text-white),
+.storefront-container .text-slate-900:not(.text-white) {
+  color: rgb(var(--theme-text, 30 41 59)) !important;
+}
+
+.storefront-container .text-gray-600:not(.text-white):not(.text-gray-200),
+.storefront-container .text-gray-500:not(.text-white):not(.text-gray-200),
+.storefront-container .text-secondary-600:not(.text-white):not(.text-gray-200),
+.storefront-container .text-slate-600:not(.text-white):not(.text-gray-200) {
+  color: rgb(var(--theme-text-muted, 100 116 139)) !important;
+}
+
+.storefront-container .border-gray-200,
+.storefront-container .border-gray-300,
+.storefront-container .border-secondary-200 {
+  border-color: rgb(var(--theme-border-color, 226 232 240)) !important;
 }
